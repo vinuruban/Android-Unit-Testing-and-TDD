@@ -47,6 +47,7 @@ public class LoginUseCaseSyncTest {
         success();
     }
 
+    /** if login succeeds, username and password should pass to the endpoint **/
     @Test
     public void loginSync_success_usernameAndPasswordPassedToEndpoint() throws Exception {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
@@ -57,6 +58,7 @@ public class LoginUseCaseSyncTest {
         assertThat(captures.get(1), is(PASSWORD));
     }
 
+    /** if login succeeds, user's auth should be cached **/
     @Test
     public void loginSync_success_authTokenCached() throws Exception {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
@@ -65,6 +67,7 @@ public class LoginUseCaseSyncTest {
         assertThat(ac.getValue(), is(AUTH_TOKEN));
     }
 
+    /** if login fails with a general error, auth token shouldn't be taken **/
     @Test
     public void loginSync_generalError_authTokenNotCached() throws Exception {
         generalError();
@@ -72,6 +75,7 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mAuthTokenCacheMock);
     }
 
+    /** if login fails with an auth error, auth token shouldn't be taken **/
     @Test
     public void loginSync_authError_authTokenNotCached() throws Exception {
         authError();
@@ -79,6 +83,7 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mAuthTokenCacheMock);
     }
 
+    /** if login fails with a server error, auth token shouldn't be taken **/
     @Test
     public void loginSync_serverError_authTokenNotCached() throws Exception {
         serverError();
@@ -86,6 +91,7 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mAuthTokenCacheMock);
     }
 
+    /** if login succeeds, login event should be posted to event bus **/
     @Test
     public void loginSync_success_loggedInEventPosted() throws Exception {
         ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
@@ -94,6 +100,7 @@ public class LoginUseCaseSyncTest {
         assertThat(ac.getValue(), is(instanceOf(LoggedInEvent.class)));
     }
 
+    /** if login fails with a general error, no login event should be posted to event bus **/
     @Test
     public void loginSync_generalError_noInteractionWithEventBusPoster() throws Exception {
         generalError();
@@ -101,6 +108,7 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mEventBusPosterMock);
     }
 
+    /** if login fails with a auth error, no login event should be posted to event bus **/
     @Test
     public void loginSync_authError_noInteractionWithEventBusPoster() throws Exception {
         authError();
@@ -108,6 +116,7 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mEventBusPosterMock);
     }
 
+    /** if login fails with a server error, no login event should be posted to event bus **/
     @Test
     public void loginSync_serverError_noInteractionWithEventBusPoster() throws Exception {
         serverError();
@@ -115,12 +124,14 @@ public class LoginUseCaseSyncTest {
         verifyNoMoreInteractions(mEventBusPosterMock);
     }
 
+    /** if login succeeds, 'success' should be returned **/
     @Test
     public void loginSync_success_successReturned() throws Exception {
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.SUCCESS));
     }
 
+    /** if login fails with a server error, 'failure' should be returned **/
     @Test
     public void loginSync_serverError_failureReturned() throws Exception {
         serverError();
@@ -128,6 +139,7 @@ public class LoginUseCaseSyncTest {
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
+    /** if login fails with a auth error, 'failure' should be returned **/
     @Test
     public void loginSync_authError_failureReturned() throws Exception {
         authError();
@@ -135,6 +147,7 @@ public class LoginUseCaseSyncTest {
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
+    /** if login fails with a general error, 'failure' should be returned **/
     @Test
     public void loginSync_generalError_failureReturned() throws Exception {
         generalError();
@@ -142,6 +155,7 @@ public class LoginUseCaseSyncTest {
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
+    /** if login fails with a network error, 'failure' should be returned **/
     @Test
     public void loginSync_networkError_networkErrorReturned() throws Exception {
         networkError();
